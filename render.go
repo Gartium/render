@@ -277,7 +277,6 @@ func (r *renderer) JSON(status int, v interface{}) {
 
 func (r *renderer) JS(status int, v interface{}) {
 	var result []byte
-	var err error
 
 	// js rendered fine, write out the result
 	r.Header().Set(ContentType, ContentJS+r.compiledCharset)

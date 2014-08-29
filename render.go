@@ -58,6 +58,7 @@ const (
 	ContentLength  = "Content-Length"
 	ContentBinary  = "application/octet-stream"
 	ContentJSON    = "application/json"
+	ContentJS      = "text/javascript"
 	ContentHTML    = "text/html"
 	ContentXHTML   = "application/xhtml+xml"
 	ContentXML     = "text/xml"
@@ -128,6 +129,8 @@ type Options struct {
 	IndentXML bool
 	// Prefixes the JSON output with the given bytes.
 	PrefixJSON []byte
+	// Prefixes the JS output with the given bytes.
+	PrefixJS []byte
 	// Prefixes the XML output with the given bytes.
 	PrefixXML []byte
 	// Allows changing of output to XHTML instead of HTML. Default is "text/html"
@@ -268,6 +271,19 @@ func (r *renderer) JSON(status int, v interface{}) {
 	r.WriteHeader(status)
 	if len(r.opt.PrefixJSON) > 0 {
 		r.Write(r.opt.PrefixJSON)
+	}
+	r.Write(result)
+}
+
+func (r *renderer) JS(status int, v interface{}) {
+	var result []byte
+	var err error
+
+	// js rendered fine, write out the result
+	r.Header().Set(ContentType, ContentJS+r.compiledCharset)
+	r.WriteHeader(status)
+	if len(r.opt.PrefixJS) > 0 {
+		r.Write(r.opt.PrefixJS)
 	}
 	r.Write(result)
 }
